@@ -8,10 +8,13 @@ import coil.transform.CircleCropTransformation
 import com.example.coildepe.databinding.ActivityMainBinding
 import io.reactivex.Flowable.just
 import io.reactivex.Observable
+import io.reactivex.ObservableOnSubscribe
 import io.reactivex.Observer
 import io.reactivex.disposables.Disposable
 import io.reactivex.internal.operators.flowable.FlowableBlockingSubscribe.subscribe
+import io.reactivex.internal.operators.observable.ObservableTimer
 import java.util.*
+import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
 import kotlin.io.println as println1
 
@@ -32,21 +35,70 @@ class MainActivity : AppCompatActivity() {
             placeholder(R.drawable.ic_launcher_background)
             crossfade(5000)
             transformations(CircleCropTransformation())
-
-            //justOperator()
-            //fromOperator()
-           /* rangeOperator().subscribe(
-                {
-                    Log.d("mainActivity","onNext:$it")
-                },
-                {
-                    Log.d("mainActivity","onError ${it}")
-                },
-                {
-                    Log.d("mainActivity","onComplete")
-                }
-            )*/
         }
+        //justOperator()
+
+        //fromOperator()
+
+        /* rangeOperator().subscribe(
+             {
+                 Log.d("mainActivity","onNext:$it")
+             },
+             {
+                 Log.d("mainActivity","onError ${it}")
+             },
+             {
+                 Log.d("mainActivity","onComplete")
+             }
+         )*/
+
+        /*repeatOperator().subscribe(
+            {
+                Log.d("mainActivity","onNext:$it")
+            },
+            {
+                Log.d("mainActivity","onError ${it}")
+            },
+            {
+                Log.d("mainActivity","onComplete")
+            }
+        )*/
+
+        /*intervalOperator().subscribe(
+            {
+                Log.d("mainActivity","onNext:$it")
+            },
+            {
+                Log.d("mainActivity","onError ${it}")
+            },
+            {
+                Log.d("mainActivity","onComplete")
+            }
+        )*/
+
+        /*timeOperator().subscribe(
+            {
+                Log.d("mainActivity","onNext:$it")
+            },
+            {
+                Log.d("mainActivity","onError ${it}")
+            },
+            {
+                Log.d("mainActivity","onComplete")
+            }
+        )*/
+
+       /* createOperator().subscribe(
+            {
+                Log.d("mainActivity","onNext:$it")
+            },
+            {
+                Log.d("mainActivity","onError ${it}")
+            },
+            {
+                Log.d("mainActivity","onComplete")
+            }
+        )*/
 
     }
 
@@ -120,4 +172,34 @@ class MainActivity : AppCompatActivity() {
     fun rangeOperator():Observable<Int>{
         return Observable.range(1,100)
     }
+
+    fun repeatOperator():Observable<Int>{
+        return Observable.range(1,10).repeat(2)
+    }
+
+    fun intervalOperator():Observable<Long>{
+        return Observable.interval(2,TimeUnit.SECONDS).takeWhile{
+            value-> value<=10
+        }
+    }
+
+    fun timeOperator():Observable<Long>{
+        return Observable.timer(5,TimeUnit.SECONDS)
+    }
+
+    fun createOperator():Observable<Int>{
+        return Observable.create(ObservableOnSubscribe {
+            try {
+                for (i in mList){
+                    it.onNext(i*5)
+                }
+            }catch (e:Exception){
+                it.onError(e)
+            }
+        })
+    }
+
+
+
+
 }
